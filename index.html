@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quadratic Solver & Grade Calculator</title>
+
+  <!-- ======================
+       INTERNAL CSS STYLES
+       ====================== -->
+  <style>
+    /* Page background and general layout */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f5f7fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Centered container */
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    /* Header styling */
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    /* Card design for each section */
+    .card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    /* Input row layout */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .form-row label {
+      flex: 1;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    /* Buttons */
+    .buttons {
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    button:hover {
+      background-color: #1e4ed1;
+    }
+
+    button.secondary {
+      background-color: #e5e7eb;
+      color: #111;
+    }
+
+    button.secondary:hover {
+      background-color: #d1d5db;
+    }
+
+    /* Result box */
+    .result {
+      background-color: #f1f5f9;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 15px;
+      min-height: 20px;
+      font-weight: bold;
+    }
+
+    /* Footer section */
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <header class="header">
+      <h1>Quadratic Solver & Grade Calculator</h1>
+      <p class="subtitle">ICT251 — JavaScript Activity</p>
+    </header>
+
+    <!-- =====================
+         QUADRATIC SOLVER
+         ===================== -->
+    <section class="card">
+      <h2>1. Quadratic Equation Solver</h2>
+      <p>Enter coefficients a, b, and c for ax² + bx + c = 0</p>
+
+      <!-- Inputs -->
+      <div class="form-row">
+        <label>a:
+          <input type="number" id="a" placeholder="Enter a">
+        </label>
+        <label>b:
+          <input type="number" id="b" placeholder="Enter b">
+        </label>
+        <label>c:
+          <input type="number" id="c" placeholder="Enter c">
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="buttons">
+        <button id="solveBtn">Compute Roots</button>
+        <button id="clearQuadBtn" class="secondary">Clear</button>
+      </div>
+
+      <!-- Result -->
+      <div id="quadResult" class="result"></div>
+    </section>
+
+    <!-- =====================
+         GRADE CALCULATOR
+         ===================== -->
+    <section class="card">
+      <h2>2. Grade Calculator</h2>
+      <p>Enter a numeric score (0–100) to find its letter grade.</p>
+
+      <!-- Inputs -->
+      <div class="form-row">
+        <label>Score:
+          <input type="number" id="score" placeholder="Enter score">
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="buttons">
+        <button id="gradeBtn">Get Grade</button>
+        <button id="clearGradeBtn" class="secondary">Clear</button>
+      </div>
+
+      <!-- Result -->
+      <div id="gradeResult" class="result"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Created by <strong>Jason Siwale</strong> — Mulungushi University</p>
+    </footer>
+  </div>
+
+  <!-- ======================
+       INTERNAL JAVASCRIPT
+       ====================== -->
+  <script>
+    /* ===============================
+       QUADRATIC EQUATION SOLVER LOGIC
+       =============================== */
+
+    // Get input and result elements
+    const aInput = document.getElementById("a");
+    const bInput = document.getElementById("b");
+    const cInput = document.getElementById("c");
+    const quadResult = document.getElementById("quadResult");
+
+    // Get buttons
+    const solveBtn = document.getElementById("solveBtn");
+    const clearQuadBtn = document.getElementById("clearQuadBtn");
+
+    // Function to solve quadratic
+    function solveQuadratic() {
+      // Convert input values to numbers
+      const a = parseFloat(aInput.value);
+      const b = parseFloat(bInput.value);
+      const c = parseFloat(cInput.value);
+
+      // Input validation
+      if (isNaN(a) || isNaN(b) || isNaN(c)) {
+        quadResult.textContent = "❌ Please enter valid numbers for a, b, and c.";
+        return;
+      }
+
+      // 'a' must not be zero
+      if (a === 0) {
+        quadResult.textContent = "❌ Coefficient 'a' must not be 0.";
+        return;
+      }
+
+      // Calculate discriminant (D)
+      const D = (b * b) - (4 * a * c);
+
+      // Compute roots based on D
+      if (D > 0) {
+        const root1 = (-b + Math.sqrt(D)) / (2 * a);
+        const root2 = (-b - Math.sqrt(D)) / (2 * a);
+        quadResult.innerHTML =
+          `✅ Two distinct real roots:<br>x₁ = ${root1.toFixed(4)}, x₂ = ${root2.toFixed(4)}`;
+      } else if (D === 0) {
+        const root = -b / (2 * a);
+        quadResult.innerHTML =
+          `✅ One repeated real root:<br>x = ${root.toFixed(4)}`;
+      } else {
+        const real = (-b / (2 * a)).toFixed(4);
+        const imag = (Math.sqrt(-D) / (2 * a)).toFixed(4);
+        quadResult.innerHTML =
+          `✅ Two complex roots:<br>x₁ = ${real} + ${imag}i, x₂ = ${real} - ${imag}i`;
+      }
+    }
+
+    // Clear quadratic fields
+    function clearQuadratic() {
+      aInput.value = "";
+      bInput.value = "";
+      cInput.value = "";
+      quadResult.textContent = "";
+    }
+
+    // Event listeners
+    solveBtn.addEventListener("click", solveQuadratic);
+    clearQuadBtn.addEventListener("click", clearQuadratic);
+
+    /* ===============================
+       GRADE CALCULATOR LOGIC
+       =============================== */
+
+    // Get elements
+    const scoreInput = document.getElementById("score");
+    const gradeResult = document.getElementById("gradeResult");
+    const gradeBtn = document.getElementById("gradeBtn");
+    const clearGradeBtn = document.getElementById("clearGradeBtn");
+
+    // Function to calculate grade
+    function calculateGrade() {
+      const score = parseInt(scoreInput.value);
+
+      // Validate input
+      if (isNaN(score)) {
+        gradeResult.textContent = "❌ Please enter a valid numeric score.";
+        return;
+      }
+      if (score < 0 || score > 100) {
+        gradeResult.textContent = "❌ Score must be between 0 and 100.";
+        return;
+      }
+
+      // Determine grade range
+      let grade;
+      if (score >= 85) grade = "A+";
+      else if (score >= 75) grade = "A";
+      else if (score >= 65) grade = "B+";
+      else if (score >= 60) grade = "B";
+      else if (score >= 55) grade = "C+";
+      else if (score >= 50) grade = "C";
+      else grade = "D";
+
+      // Show result
+      gradeResult.textContent = `✅ Score ${score} → Grade ${grade}`;
+    }
+
+    // Clear grade fields
+    function clearGrade() {
+      scoreInput.value = "";
+      gradeResult.textContent = "";
+    }
+
+    // Event listeners
+    gradeBtn.addEventListener("click", calculateGrade);
+    clearGradeBtn.addEventListener("click", clearGrade);
+  </script>
+</body>
+</html>
